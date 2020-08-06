@@ -19,7 +19,9 @@ class GMM:
     def kmeans_initial(self):
         mu = []
         sigma = []
+        # rows:all frames(18593)  columns: 39-D
         data = read_all_data('train/feats.scp')
+        # centroids: 每一个高斯分量((5, 39)), label:每一帧对应重心的索引(18593)
         (centroids, labels) = vq.kmeans2(data, self.K, minit="points", iter=100)
         clusters = [[] for i in range(self.K)]
         for (l,d) in zip(labels,data):
@@ -58,6 +60,14 @@ class GMM:
         """
             FINISH by YOUSELF
         """
+         pdfs = np.zeros((self.K, self.dim))
+        for k in range(self.K):
+            print(self.pi[k].shape, self.sigma[k].shape, (X - self.mu[k]).shape, self.mu[k].shape)
+
+            p_x = self.pi[k] * (1 / (np.power(2 * np.pi, self.dim / 2) * self.sigma[k])) * np.exp(
+                -(np.dot(np.dot((X - self.mu[k]), 1 / np.diag(self.sigma[k])), (X - self.mu[k]).T)) / 2)
+            pdfs[k, :] = p_x
+        print(pdfs)
         return log_llh
 
     def em_estimator(self , X):

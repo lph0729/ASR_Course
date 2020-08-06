@@ -12,7 +12,6 @@ import sys, os, re, gzip, struct
 
 #################################################
 # Adding kaldi tools to shell path,
-
 # Select kaldi,
 if not 'KALDI_ROOT' in os.environ:
     # Default! To change run python with 'export KALDI_ROOT=/some_dir python'
